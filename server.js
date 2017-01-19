@@ -57,8 +57,13 @@ app.post('/', webhook(flint));
 
 
 //Start up the website
-var server = app.listen(port);
-console.log('Listening on port: ', port);
+//var server = app.listen(port);
+var server = app.listen(config.port, function () {
+  flint.debug('Flint listening on port %s', config.port);
+  console.log('Listening on port: ', port);
+});
+
+
 
 // gracefully shutdown (ctrl-c)
 process.on('SIGINT', function() {
