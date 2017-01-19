@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 var port = process.env.port || 8081;
 
 //Serve up files in public folder
-app.use('/', express.static(__dirname + '/public'));
+app.use('/Home', express.static(__dirname + '/public'));
 
 // init flint
 var flint = new Flint(config);
