@@ -8,18 +8,25 @@ var config = {
   "port": 8080
 }
 
-var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
-app.use(bodyParser.json());
-
+//TODO: research why for some reason app.listen does not take the port in the config var
 //Specify a port
 var port = process.env.port || 8080;
+
+var express = require('express');
+var bodyParser = require('body-parser');
+var request = require('request');
+var Imgflipper = require('imgflipper');
+var http = require('http');
+
+var app = express();
+app.use(bodyParser.json());
 
 //Serve up files in public folder
 app.use('/', express.static(__dirname + '/public'));
 
-// init flint
+/*********************************************************
+##  init flint
+*********************************************************/
 var flint = new Flint(config);
 flint.start();
 console.log("Starting flint, please wait...");
@@ -28,11 +35,14 @@ flint.on("initialized", function() {
   console.log("Flint initialized successfully! [Press CTRL-C to quit]");
 });
 
-
+/*********************************************************
+##  add flint event listeners
+*********************************************************/
 flint.on('message', function(bot, trigger, id) {
   flint.debug('"%s" said "%s" in room "%s"', trigger.personEmail, trigger.text, trigger.roomTitle);
 });
 
+//Welcome message when a new room or 1:1 is spawned with the bot
 flint.on('spawn', function(bot) {
   //flint.debug('new bot spawned in room: %s', bot.room.title);
   console.log('new bot spawned in room: %s', bot.room.title);
@@ -43,6 +53,36 @@ flint.on('spawn', function(bot) {
     bot.say("Hi! To get started just type hello.");
   };
   bot.repeat;
+});
+
+//does not work the first call; triggers when i readd the bot to the same room
+//TODO: Understand the events better
+flint.on("personEnters", function(bot, person, id) {
+	flint.debug('personEnters event in room: "%s"', bot.room.title);
+
+  //presents different messages based on room or 1:1
+  if(bot.isGroup){
+     bot.say("Hi! To get started just type @Ferb /hello. \n\n\n **Note that this is a 'Group' room. I will wake up only when mentioned.**");
+  }else{
+    bot.say("Hi! To get started just type hello.");
+  };
+  bot.repeat;
+});
+
+flint.on("membershipCreated", function(membership, id) {
+
+	flint.debug('membershipCreated event in room: "%s" for "%s"', membership.roomId, membership.personEmail);
+
+});
+
+flint.on("membershipDeleted", function(membership, id) {
+
+	flint.debug('membershipCreated event in room: "%s" for "%s"', membership.roomId, membership.personEmail);
+
+});
+
+flint.on('despawn', function(bot) {
+	flint.debug('bot despawned in room: "%s"', bot.room.title);
 });
 
 
@@ -56,13 +96,9 @@ flint.hears('/hi', function(bot, trigger) {
 app.post('/', webhook(flint));
 
 //Start up the website
-//var server = app.listen(port);
-//console.log('Listening on port: ', port);
-//console.log('Config.Port: ', config.port);
-
-var server = app.listen(config.port, function () {
-  flint.debug('Flint listening on port %s', config.port);
-});
+var server = app.listen(port);
+console.log('Listening on port: ', port);
+console.log('Config.Port: ', config.port);
 
 
 // gracefully shutdown (ctrl-c)
