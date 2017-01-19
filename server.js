@@ -26,6 +26,13 @@ flint.on("initialized", function() {
   console.log("Flint initialized successfully! [Press CTRL-C to quit]");
 });
 
+flint.hears('/hello', function(bot, trigger) {
+  console.log("/hello fired");
+  bot.say('%s, you said hello to me!', trigger.personDisplayName);
+});
+
+
+
 //Start up the website
 var server = app.listen(port);
 console.log('Listening on port: ', port);
