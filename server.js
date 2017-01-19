@@ -5,7 +5,7 @@ var webhook = require('node-flint/webhook');
 var config = {
   "webhookUrl": "https://testexpresssite.azurewebsites.net",
   "token": "ZjQ5YTNjZDUtMWQxOC00YzkzLWIxODEtNDM1OTAzNjU2MjVkNzg5M2M4ZTItYWIw",
-  "port": "8080"
+  "port": 8080
 }
 
 var express = require('express');
@@ -55,10 +55,15 @@ flint.hears('/hi', function(bot, trigger) {
 // define express path for incoming webhooks
 app.post('/', webhook(flint));
 
-
 //Start up the website
-var server = app.listen(port);
-console.log('Listening on port: ', port);
+//var server = app.listen(port);
+//console.log('Listening on port: ', port);
+//console.log('Config.Port: ', config.port);
+
+var server = app.listen(config.port, function () {
+  flint.debug('Flint listening on port %s', config.port);
+});
+
 
 // gracefully shutdown (ctrl-c)
 process.on('SIGINT', function() {
