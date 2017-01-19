@@ -5,7 +5,7 @@ var webhook = require('node-flint/webhook');
 const config = {
   "webhookUrl": "https://testexpresssite.azurewebsites.net", //"https://ferb.localtunnel.me",
   "token": "ZjQ5YTNjZDUtMWQxOC00YzkzLWIxODEtNDM1OTAzNjU2MjVkNzg5M2M4ZTItYWIw",
-  "port": 8080
+  "port": 8081
 }
 
 var express = require('express');
@@ -15,7 +15,7 @@ var app = express();
 app.use(bodyParser.json());
 
 //Specify a port
-var port = process.env.port || 8080;
+var port = process.env.port || 8081;
 
 //Serve up files in public folder
 app.use('/', express.static(__dirname + '/public'));
