@@ -9,7 +9,9 @@ var config = {
 }
 
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
+app.use(bodyParser.json());
 
 //Specify a port
 var port = process.env.port || 8080;
@@ -26,6 +28,10 @@ flint.on("initialized", function() {
   console.log("Flint initialized successfully! [Press CTRL-C to quit]");
 });
 
+// define express path for incoming webhooks
+app.post('/', webhook(flint));
+
+
 //Start up the website
 var server = app.listen(port);
 console.log('Listening on port: ', port);
@@ -41,28 +47,6 @@ process.on('SIGINT', function() {
 
 });
 
-
-// define express path for incoming webhooks
-app.post('/', webhook(flint));
-
-//Start up the website
-//var server = app.listen(port);
-//console.log('Listening on port: ', port);
-var server = app.listen(config.port, function () {
-  flint.debug('Flint listening on port %s', config.port);
-});
-
-
-// gracefully shutdown (ctrl-c)
-process.on('SIGINT', function() {
-  flint.debug('stopping...');
-  server.close();
-
-  flint.stop().then(function() {
-    process.exit();
-  });
-
-});
 
 /*
 
