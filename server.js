@@ -28,6 +28,11 @@ flint.on("initialized", function() {
   console.log("Flint initialized successfully! [Press CTRL-C to quit]");
 });
 
+
+flint.on('message', function(bot, trigger, id) {
+  flint.debug('"%s" said "%s" in room "%s"', trigger.personEmail, trigger.text, trigger.roomTitle);
+});
+
 flint.on('spawn', function(bot) {
   //flint.debug('new bot spawned in room: %s', bot.room.title);
   console.log('new bot spawned in room: %s', bot.room.title);
@@ -39,6 +44,13 @@ flint.on('spawn', function(bot) {
   };
   bot.repeat;
 });
+
+
+flint.hears('/hi', function(bot, trigger) {
+  console.log("/hi fired");
+  bot.say('Hi %s! How are you today?', trigger.personDisplayName);
+});
+
 
 // define express path for incoming webhooks
 app.post('/', webhook(flint));
