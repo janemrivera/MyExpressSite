@@ -28,6 +28,18 @@ flint.on("initialized", function() {
   console.log("Flint initialized successfully! [Press CTRL-C to quit]");
 });
 
+flint.on('spawn', function(bot) {
+  //flint.debug('new bot spawned in room: %s', bot.room.title);
+  console.log('new bot spawned in room: %s', bot.room.title);
+  //presents different messages based on room or 1:1
+  if(bot.isGroup){
+     bot.say("Hi! To get started just type @Ferb /hello. \n\n\n **Note that this is a 'Group' room. I will wake up only when mentioned.**");
+  }else{
+    bot.say("Hi! To get started just type hello.");
+  };
+  bot.repeat;
+});
+
 // define express path for incoming webhooks
 app.post('/', webhook(flint));
 
