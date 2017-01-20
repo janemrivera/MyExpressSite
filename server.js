@@ -3,7 +3,7 @@
 var Flint = require('node-flint');
 var webhook = require('node-flint/webhook');
 var config = {
-  "webhookUrl":  "https://ferb.localtunnel.me", //"https://testexpresssite.azurewebsites.net",
+  "webhookUrl":  "https://testexpresssite.azurewebsites.net", //"https://ferb.localtunnel.me", //
   "token": "ZjQ5YTNjZDUtMWQxOC00YzkzLWIxODEtNDM1OTAzNjU2MjVkNzg5M2M4ZTItYWIw",
   "port": 8080
 }
