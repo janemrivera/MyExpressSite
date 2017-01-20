@@ -3,7 +3,7 @@
 var Flint = require('node-flint');
 var webhook = require('node-flint/webhook');
 var config = {
-  "webhookUrl":  "https://testexpresssite.azurewebsites.net", //"https://ferb.localtunnel.me", //
+  "webhookUrl":  "https://testexpresssite.azurewebsites.net", //"https://ferb.localtunnel.me",
   "token": "ZjQ5YTNjZDUtMWQxOC00YzkzLWIxODEtNDM1OTAzNjU2MjVkNzg5M2M4ZTItYWIw",
   "port": 8080
 }
@@ -664,4 +664,19 @@ process.on('SIGINT', function() {
 	"status": "active",
 	"created": "2017-01-19T17:18:58.509Z"
 }
+
+flint.use('events.js');
+
+// events.js
+module.exports = function(flint) {
+  flint.on('spawn', function(bot) {
+    console.log('new bot spawned in room: %s', bot.myroom.title);
+  });
+  flint.on('despawn', function(bot) {
+    console.log('bot despawned in room: %s', bot.myroom.title);
+  });
+  flint.on('messageCreated', function(message, bot) {
+    console.log('"%s" said "%s" in room "%s"', message.personEmail, message.text, bot.myroom.title);
+  });
+};
 */
