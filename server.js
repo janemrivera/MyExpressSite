@@ -3,7 +3,7 @@
 var Flint = require('node-flint');
 var webhook = require('node-flint/webhook');
 var config = {
-  "webhookUrl": "https://testexpresssite.azurewebsites.net", // "https://ferb.localtunnel.me",
+  "webhookUrl":  "https://ferb.localtunnel.me", //"https://testexpresssite.azurewebsites.net",
   "token": "ZjQ5YTNjZDUtMWQxOC00YzkzLWIxODEtNDM1OTAzNjU2MjVkNzg5M2M4ZTItYWIw",
   "port": 8080
 }
@@ -50,7 +50,7 @@ flint.on('spawn', function(bot) {
   if(bot.isGroup){
      bot.say("Hi! To get started just type @Ferb /hello. \n\n\n **Note that this is a 'Group' room. I will wake up only when mentioned.**");
   }else{
-    bot.say("Hi! To get started just type hello.");
+    bot.say("Hi! To get started just type /hello.");
   };
   bot.repeat;
 });
@@ -64,7 +64,7 @@ flint.on("personEnters", function(bot, person, id) {
   if(bot.isGroup){
      bot.say("Hi! To get started just type @Ferb /hello. \n\n\n **Note that this is a 'Group' room. I will wake up only when mentioned.**");
   }else{
-    bot.say("Hi! To get started just type hello.");
+    bot.say("Hi! To get started just type /hello.");
   };
   bot.repeat;
 });
@@ -125,9 +125,10 @@ flint.hears('/whoami', function(bot, trigger) {
   //the "trigger" parameter gives you access to data about the user who entered the command
   let roomId = "*" + trigger.roomId + "*";
   let roomTitle = "**" + trigger.roomTitle + "**";
+  let personId = trigger.personId;
   let personEmail = trigger.personEmail;
   let personDisplayName = trigger.personDisplayName;
-  let outputString = `${personDisplayName} here is some of your information: \n\n\n **Room:** you are in "${roomTitle}" \n\n\n **Room id:** ${roomId} \n\n\n **Email:** your email on file is *${personEmail}*`;
+  let outputString = `${personDisplayName} here are some of your information: \n\n\n **Room:** you are in "${roomTitle}" \n\n\n **Room id:** ${roomId} \n\n\n **Email:** your email on file is *${personEmail}* \n\n\n **Person Id:** ${personId}`;
   bot.say("markdown", outputString);
 });
 
@@ -293,6 +294,7 @@ flint.hears('/weather', function(bot, trigger) {
 /****************************************
 ## Meme Generator
 ****************************************/
+//<editor-fold Meme Generator>
 var meme = {
 
   brace: {id: "61546",desc: "** - Brace yourselves, ... is coming"},
@@ -350,14 +352,14 @@ flint.hears('/meme', function(bot, trigger) {
 
 flint.hears('/memehelp', function(bot, trigger) {
   console.log("/memehelp fired");
-  let outputString = 'Usage: **/meme memetype &ldquo;top text&rdquo; &ldquo;bottom text&rdquo;** \n\n Currently available memes:\n';
+  let outputString = 'Usage: ``/meme memetype "top text" "bottom text"`` \n\n Currently available memes:\n';
   for (var m in meme){
-      outputString += "\t\t" + m + " " + meme[m].desc + "\n"
+      outputString += "\t\t " + m + " " + meme[m].desc + "\n"
   }
 
-  bot.say('markdown', outputString);
+  bot.say("markdown", outputString);
 });
-
+//</editor-fold>
 
 /****************************************
  ServiceNow Test
@@ -539,7 +541,7 @@ flint.hears('/room', function(bot, trigger) {
   let roomId = "*" + trigger.roomId + "*";
   let roomTitle = "**" + trigger.roomTitle + "**";
   let outputString = `The roomId for room ${roomTitle} is ${roomId}`;
-  bot.say(outputString);
+  bot.say("markdown",outputString);
 });
 
 //// @botname /createroom <room name>
@@ -617,7 +619,7 @@ app.post('/', webhook(flint));
 //Start up the website
 var server = app.listen(port);
 console.log('Listening on port: ', port);
-console.log('Config.Port: ', config.port);
+//console.log('Config.Port: ', config.port);
 
 
 // gracefully shutdown (ctrl-c)
