@@ -17,6 +17,11 @@ var bodyParser = require('body-parser');
 var request = require('request');
 var Imgflipper = require('imgflipper');
 var http = require('http');
+var timer = require('timers');
+
+var apiai = require("apiai");
+var apiaiapp = apiai("4dc8d03e753c4a6db3907dd67380dcfe");
+
 
 var app = express();
 app.use(bodyParser.json());
@@ -103,7 +108,7 @@ flint.hears('/help', function(bot, trigger) {
 
 flint.hears('/about', function(bot, trigger) {
   console.log("/about fired");
-  let outputString = "```\n{\n  'author':'Jane Rivera <jmrivera@nalco.com>;',\n  'code':'My Express App with Ferb',\n  'description':'S test bot for checking out the Spark APIs',\n  'healthcheck':'GET https://testexpresssite.azurewebsites.net/',\n  'webhook':'POST https://testexpresssite.azurewebsites.net/'\n}\n```"
+  let outputString = "```\n{\n  'author':'Jane Rivera &lt;jmrivera@nalco.com&gt;;',\n  'code':'My Express App with Ferb',\n  'description':'Spark test bot for checking out the Spark APIs',\n  'healthcheck':'GET https://testexpresssite.azurewebsites.net/',\n  'webhook':'POST https://testexpresssite.azurewebsites.net/'\n}\n```"
    bot.say("markdown", outputString);
 });
 
@@ -198,6 +203,17 @@ flint.hears('/acman', function(bot, trigger) {
 // using regex to match across entire message
 flint.hears(/(^| )beer( |.|$)/i, function(bot, trigger, id) {
   bot.say('Enjoy a beer, %s! ðŸ»', trigger.personDisplayName);
+});
+
+
+flint.hears("/timertest", function(bot, trigger){
+  console.log("/timertest fired")
+  var timeout_ms = 5000; // 2 seconds
+  var timeout = setTimeout(function() {
+    bot.say("time's up!");
+  }, timeout_ms)
+  bot.say("waiting for timer");
+
 });
 
 /****************************************
@@ -607,6 +623,7 @@ flint.hears('/implode', function(bot, trigger) {
 flint.hears(/.*/, function(bot, trigger) {
   console.log("Unknown command fired.");
   bot.say('You see a shimmering light, but it is growing dim...');
+
 }, 20);
 
 
@@ -615,6 +632,15 @@ flint.hears(/.*/, function(bot, trigger) {
 ****************************************/
 // define express path for incoming webhooks
 app.post('/', webhook(flint));
+
+app.post('/ai', (req, res) => {
+  if (req.body.result.action === 'weather') {
+    let city = req.body.result.parameters['geo-city'];
+    //let restUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID='+WEATHER_API_KEY+'&q='+city;
+
+    bot.say("weather intent was triggered for %s", city);
+  }
+});
 
 //Start up the website
 var server = app.listen(port);
