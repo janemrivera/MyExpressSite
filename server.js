@@ -635,18 +635,19 @@ flint.hears(/.*/, function(bot, trigger) {
 app.post('/', webhook(flint));
 
 app.post('/ai', function(req, res){
-  console.log(req.body.result.action);
+  //console.log(req.body.result.action);
 
   if (req.body.result.action === 'weather') {
-    let city = req.body.result.parameters['geo-city'];
+    var city = req.body.result.parameters['geo-city'];
     //let restUrl = 'http://api.openweathermap.org/data/2.5/weather?APPID='+WEATHER_API_KEY+'&q='+city;
     console.log(city);
-    bot.say(city)
+    //bot.say(city);
+
+      res.send("testing ai");
+
+      bot.say("weather intent was triggered for %s", city);
   }
 
-  res.send("testing ai");
-
-  bot.say("weather intent was triggered for %s", city);
 });
 
 //Start up the website
